@@ -1,21 +1,56 @@
+import { AppBar, Toolbar, Typography, IconButton, Box } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+
 export default function Header() {
   return (
-    <header className="fixed top-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200/50 w-full" style={{ height: 'var(--header-height, 80px)' }}>
-      <div className="w-full flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8 h-full">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <button className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20">
-            <span className="material-symbols-outlined text-gray-700 text-xl">menu</span>
-          </button>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">
+    <AppBar 
+      position="fixed" 
+      sx={{ 
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        backdropFilter: 'blur(8px)',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        borderBottom: '1px solid rgba(229, 231, 235, 0.5)',
+        height: 'var(--header-height, 80px)',
+        zIndex: 30
+      }}
+    >
+      <Toolbar sx={{ height: '100%', px: { xs: 2, sm: 3, lg: 4 } }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, sm: 2 } }}>
+          <IconButton
+            sx={{
+              p: 1,
+              borderRadius: '50%',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.04)',
+              },
+              '&:focus': {
+                outline: 'none',
+                boxShadow: '0 0 0 2px rgba(61, 153, 245, 0.2)',
+              }
+            }}
+          >
+            <MenuIcon sx={{ color: 'text.secondary', fontSize: '1.25rem' }} />
+          </IconButton>
+          <Typography
+            variant="h5"
+            component="h1"
+            sx={{
+              fontWeight: 700,
+              color: 'text.primary',
+              letterSpacing: '-0.025em',
+              fontSize: { xs: '1.25rem', sm: '1.5rem' }
+            }}
+          >
             Recreational
-          </h1>
-        </div>
+          </Typography>
+        </Box>
         
         {/* Add a placeholder for potential future navigation items */}
-        <div className="flex items-center gap-2">
+        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           {/* Future navigation items can go here */}
-        </div>
-      </div>
-    </header>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 } 
