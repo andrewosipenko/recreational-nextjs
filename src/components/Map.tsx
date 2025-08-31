@@ -80,7 +80,7 @@ export default function HotelMap() {
     loadHotels();
   }, [mounted]);
 
-  const onLoad = useCallback((map: any) => {
+  const onLoad = useCallback((map: unknown) => {
     console.log('Map loaded:', map);
   }, []);
 

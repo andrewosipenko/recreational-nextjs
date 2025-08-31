@@ -8,10 +8,9 @@ import { Hotel } from '../utils/csvParser';
 
 interface HotelCardProps {
   hotel: Hotel;
-  onClose?: () => void;
 }
 
-export default function HotelCard({ hotel, onClose }: HotelCardProps) {
+export default function HotelCard({ hotel }: HotelCardProps) {
   // Add null check to prevent errors
   if (!hotel) {
     return null;
