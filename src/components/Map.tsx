@@ -152,6 +152,7 @@ export default function HotelMap() {
           options={{
             mapTypeId: 'hybrid',
             mapTypeControl: false,
+            streetViewControl: false,
             styles: [
               {
                 featureType: 'poi',
