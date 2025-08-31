@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Header from '@/components/Header';
 import Introduction from '@/components/Introduction';
 import Map from '@/components/Map';
@@ -21,12 +21,22 @@ export default function Home() {
       }}>
         <Introduction />
         <Box sx={{
-          height: 'calc(100vh - var(--header-height) - 8rem)',
+          // height: 'calc(100vh - var(--header-height) - 12rem)',
+          height: '60vh',
           position: 'relative',
           width: '100%',
           px: 2,
           py: { xs: 3, sm: 4, lg: 5 }
         }}>
+          <Typography 
+            variant="h4" 
+            sx={{ 
+              mb: 2,
+              textAlign: 'center',
+            }}
+          >
+            Hotel map
+          </Typography>
           <Map />
         </Box>
       </Box>
