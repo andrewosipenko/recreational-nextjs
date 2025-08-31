@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import Header from '@/components/Header';
 import Introduction from '@/components/Introduction';
-import Map from '@/components/Map';
+import HotelMap from '@/components/Map';
 
 export default function Home() {
   return (
@@ -37,7 +37,7 @@ export default function Home() {
           >
             Hotel map
           </Typography>
-          <Map />
+          <HotelMap />
         </Box>
       </Box>
     </Box>

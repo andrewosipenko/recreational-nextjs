@@ -68,9 +68,6 @@ export default function HotelCard({ hotel, onClose }: HotelCardProps) {
             color={hotel.inForest && hotel.inForest > 1 ? 'success' : hotel.inForest && hotel.inForest > 0.5 ? 'warning' : 'default'}
             variant="outlined"
           />
-          <Typography variant="caption" color="text.secondary">
-            ID: {hotel.id || 'Unknown'}
-          </Typography>
         </Box>
       </CardContent>
     </Card>
