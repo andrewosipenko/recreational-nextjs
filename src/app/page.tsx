@@ -2,7 +2,6 @@ import { Box } from '@mui/material';
 import Header from '@/components/Header';
 import Introduction from '@/components/Introduction';
 import Map from '@/components/Map';
-import HotelCard from '@/components/HotelCard';
 
 export default function Home() {
   return (
@@ -27,7 +26,6 @@ export default function Home() {
           width: '100%'
         }}>
           <Map />
-          <HotelCard />
         </Box>
       </Box>
     </Box>

@@ -1,108 +1,78 @@
-import { Box, Card, CardContent, Typography, Link, Chip } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import Image from 'next/image';
+'use client';
 
-export default function HotelCard() {
+import { Card, CardContent, Typography, Box, Chip, Link } from '@mui/material';
+import HotelIcon from '@mui/icons-material/Hotel';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import LanguageIcon from '@mui/icons-material/Language';
+import { Hotel } from '../utils/csvParser';
+
+interface HotelCardProps {
+  hotel: Hotel;
+  onClose?: () => void;
+}
+
+export default function HotelCard({ hotel, onClose }: HotelCardProps) {
+  // Add null check to prevent errors
+  if (!hotel) {
+    return null;
+  }
+
   return (
-    <Box sx={{
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      p: 2,
-      zIndex: 20,
-      width: '100%'
-    }}>
-      <Card sx={{
-        maxWidth: { xs: '28rem', md: '32rem' },
-        mx: 'auto',
-        borderRadius: 4,
-        boxShadow: 8,
-        overflow: 'hidden',
-        transform: 'transition: transform 0.3s ease',
+    <Card
+      sx={{
+        maxWidth: 300,
+        boxShadow: 4,
+        borderRadius: 2,
+        position: 'relative',
         '&:hover': {
-          transform: 'scale(1.02)',
-        },
-        width: '100%'
-      }}>
-        <Box sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' }
-        }}>
-          <Box sx={{ flexShrink: 0 }}>
-            <Image
-              alt="Hotel Gołębiewski"
-              src="https://lh3.googleusercontent.com/p/AF1QipM7lT6L8X4vFzJjY2B8U7G9D5K8L7H2A9R5F4W3=s1360-w1360-h1020"
-              width={192}
-              height={192}
-              style={{
-                height: '12rem',
-                width: '100%',
-                objectFit: 'cover'
-              }}
-            />
-          </Box>
-          <CardContent sx={{
-            p: 3,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center'
-          }}>
-            <Chip
-              label="Hotel"
-              size="small"
-              sx={{
-                textTransform: 'uppercase',
-                fontWeight: 600,
-                mb: 0.5,
-                backgroundColor: 'primary.main',
-                color: 'white',
-                fontSize: '0.75rem'
-              }}
-            />
-            <Typography
-              variant="h5"
-              component="h2"
-              sx={{
-                fontWeight: 700,
-                color: 'text.primary',
-                mb: 1.5,
-                lineHeight: 1.2,
-                fontSize: { xs: '1.25rem', md: '1.5rem' }
-              }}
-            >
-              Hotel Gołębiewski
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'text.secondary',
-                mb: 2,
-                lineHeight: 1.6
-              }}
-            >
-              Experience luxury and comfort in the heart of Poland. Perfect for both business and leisure travelers.
-            </Typography>
-            <Link
-              href="#"
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                color: 'primary.main',
-                textDecoration: 'none',
-                fontWeight: 500,
-                '&:hover': {
-                  textDecoration: 'underline',
-                },
-                transition: 'color 0.2s ease'
-              }}
-            >
-              Odwiedź stronę
-              <ArrowForwardIcon sx={{ ml: 0.5, fontSize: '1rem' }} />
-            </Link>
-          </CardContent>
+          boxShadow: 6,
+        }
+      }}
+    >
+      <CardContent sx={{ p: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+          <HotelIcon sx={{ color: 'primary.main', mr: 1 }} />
+          <Typography variant="h6" component="h3" sx={{ fontWeight: 600, flex: 1 }}>
+            {hotel.name || 'Unknown Hotel'}
+          </Typography>
         </Box>
-      </Card>
-    </Box>
+
+        <Box sx={{ mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <LocationOnIcon sx={{ color: 'text.secondary', fontSize: '1rem', mr: 0.5 }} />
+            <Typography variant="body2" color="text.secondary">
+              {hotel.latitude?.toFixed(4) || '0'}, {hotel.longitude?.toFixed(4) || '0'}
+            </Typography>
+          </Box>
+          
+          {hotel.website && (
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+              <LanguageIcon sx={{ color: 'text.secondary', fontSize: '1rem', mr: 0.5 }} />
+              <Link 
+                href={hotel.website.startsWith('http') ? hotel.website : `https://${hotel.website}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="body2"
+                sx={{ textDecoration: 'none' }}
+              >
+                {hotel.website}
+              </Link>
+            </Box>
+          )}
+        </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Chip 
+            label={`Forest Index: ${hotel.inForest?.toFixed(2) || '0.00'}`}
+            size="small"
+            color={hotel.inForest && hotel.inForest > 1 ? 'success' : hotel.inForest && hotel.inForest > 0.5 ? 'warning' : 'default'}
+            variant="outlined"
+          />
+          <Typography variant="caption" color="text.secondary">
+            ID: {hotel.id || 'Unknown'}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
   );
 } 
