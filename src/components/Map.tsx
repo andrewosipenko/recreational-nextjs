@@ -1,22 +1,31 @@
 'use client';
 
 import { Box, Paper, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Hotel, parseHotelsFromCSV } from '../utils/csvParser';
-import dynamic from 'next/dynamic';
-import { APIProvider, Map, Marker, InfoWindow } from '@vis.gl/react-google-maps';
+import { GoogleMap, Marker, InfoWindow, useJsApiLoader, MarkerClusterer } from '@react-google-maps/api';
 
-// Dynamically import HotelCard to avoid SSR issues
-const HotelCard = dynamic(() => import('./HotelCard'), {
-  ssr: false,
-  loading: () => <div>Loading...</div>
-});
+const containerStyle = {
+  width: '100%',
+  height: '100%'
+};
+
+const center = {
+  lat: 52.237049,
+  lng: 21.017532
+};
 
 export default function HotelMap() {
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
   const [mounted, setMounted] = useState(false);
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+    libraries: ['places']
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -71,12 +80,20 @@ export default function HotelMap() {
     loadHotels();
   }, [mounted]);
 
+  const onLoad = useCallback((map: any) => {
+    console.log('Map loaded:', map);
+  }, []);
+
+  const onUnmount = useCallback(() => {
+    console.log('Map unmounted');
+  }, []);
+
   const handleMarkerClick = (hotel: Hotel) => {
     setSelectedHotel(selectedHotel?.id === hotel.id ? null : hotel);
   };
 
   // Show a simple loading state that matches server and client
-  if (!mounted) {
+  if (!mounted || !isLoaded) {
     return (
       <Paper sx={{
         height: '100%',
@@ -126,53 +143,87 @@ export default function HotelMap() {
         }}
       >
         {/* Google Map */}
-        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
-          <Map
-            style={{ width: '100%', height: '100%' }}
-            defaultCenter={{ lat: 52.237049, lng: 21.017532 }} // Warsaw
-            defaultZoom={6}
-            mapId="DEMO_MAP_ID"
-            mapTypeId="hybrid"
-            mapTypeControl={false}
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={6}
+          onLoad={onLoad}
+          onUnmount={onUnmount}
+          options={{
+            mapTypeId: 'hybrid',
+            mapTypeControl: false,
+            styles: [
+              {
+                featureType: 'poi',
+                elementType: 'labels',
+                stylers: [{ visibility: 'off' }]
+              }
+            ]
+          }}
+        >
+          <MarkerClusterer
+            options={{
+              gridSize: 40,
+              maxZoom: 15,
+              minimumClusterSize: 2,
+              styles: [
+                {
+                  url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                    <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="20" cy="20" r="18" fill="#1976d2" stroke="white" stroke-width="2"/>
+                    </svg>
+                  `),
+                  width: 40,
+                  height: 40,
+                  textColor: 'white',
+                  textSize: 14
+                }
+              ]
+            }}
           >
-            {hotels.map((hotel) => (
-              <Marker
-                key={hotel.id}
-                position={{ lat: hotel.latitude, lng: hotel.longitude }}
-                onClick={() => handleMarkerClick(hotel)}
-                title={hotel.name}
-              />
-            ))}
-            
-            {selectedHotel && (
-              <InfoWindow
-                position={{ lat: selectedHotel.latitude, lng: selectedHotel.longitude }}
-                onCloseClick={() => setSelectedHotel(null)}
-              >
-                <div style={{ padding: '8px', maxWidth: '250px' }}>
-                  <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 'bold' }}>
-                    {selectedHotel.name}
-                  </h3>
-                  {selectedHotel.website && (
-                    <p style={{ margin: '4px 0', fontSize: '14px', color: '#666' }}>
-                      <a 
-                        href={`https://${selectedHotel.website}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        style={{ color: '#1976d2', textDecoration: 'none' }}
-                      >
-                        {selectedHotel.website}
-                      </a>
-                    </p>
-                  )}
-                  <p style={{ margin: '4px 0', fontSize: '12px', color: '#888' }}>
-                    Forest distance: {selectedHotel.inForest}km
-                  </p>
-                </div>
-              </InfoWindow>
+            {(clusterer) => (
+              <>
+                {hotels.map((hotel) => (
+                  <Marker
+                    key={hotel.id}
+                    position={{ lat: hotel.latitude, lng: hotel.longitude }}
+                    onClick={() => handleMarkerClick(hotel)}
+                    title={hotel.name}
+                    clusterer={clusterer}
+                  />
+                ))}
+              </>
             )}
-          </Map>
-        </APIProvider>
+          </MarkerClusterer>
+
+          {selectedHotel && (
+            <InfoWindow
+              position={{ lat: selectedHotel.latitude, lng: selectedHotel.longitude }}
+              onCloseClick={() => setSelectedHotel(null)}
+            >
+              <div style={{ padding: '8px', maxWidth: '250px' }}>
+                <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 'bold' }}>
+                  {selectedHotel.name}
+                </h3>
+                {selectedHotel.website && (
+                  <p style={{ margin: '4px 0', fontSize: '14px', color: '#666' }}>
+                    <a 
+                      href={`https://${selectedHotel.website}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      style={{ color: '#1976d2', textDecoration: 'none' }}
+                    >
+                      {selectedHotel.website}
+                    </a>
+                  </p>
+                )}
+                <p style={{ margin: '4px 0', fontSize: '12px', color: '#888' }}>
+                  Forest distance: {selectedHotel.inForest}km
+                </p>
+              </div>
+            </InfoWindow>
+          )}
+        </GoogleMap>
         
         {/* Loading indicator */}
         {loading && (
