@@ -23,7 +23,9 @@ export default function Home() {
         <Box sx={{
           height: 'calc(100vh - var(--header-height) - 8rem)',
           position: 'relative',
-          width: '100%'
+          width: '100%',
+          px: 2,
+          py: { xs: 3, sm: 4, lg: 5 }
         }}>
           <Map />
         </Box>

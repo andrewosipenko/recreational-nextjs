@@ -46,7 +46,7 @@ export default function Introduction() {
             }}
           >
             Hej, my name is Andrzej,<br/>
-            I like to travel in Poland and prepared a list of recreational places for myself but later on decided to share on the internet.
+            I like to travel around Poland and originally made a list of recreational places for myself, but later on decided to share on the internet.
           </Typography>
         </Box>
       </Paper>
