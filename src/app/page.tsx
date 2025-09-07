@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import Header from '@/components/Header';
 import Introduction from '@/components/Introduction';
 import HotelMap from '@/components/Map';
+import FeaturedDestinations from '@/components/FeaturedDestinations';
 
 export default function Home() {
   return (
@@ -26,7 +27,8 @@ export default function Home() {
           position: 'relative',
           width: '100%',
           px: 2,
-          py: { xs: 3, sm: 4, lg: 5 }
+          py: { xs: 3, sm: 4, lg: 5 },
+          mb: { xs: 4, sm: 6, lg: 8 }
         }}>
           <Typography 
             variant="h4" 
@@ -39,6 +41,7 @@ export default function Home() {
           </Typography>
           <HotelMap />
         </Box>
+        <FeaturedDestinations />
       </Box>
     </Box>
   );
