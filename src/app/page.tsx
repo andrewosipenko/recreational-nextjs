@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import Introduction from '@/components/Introduction';
 import HotelMap from '@/components/Map';
 import FeaturedDestinations from '@/components/FeaturedDestinations';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
@@ -43,6 +44,7 @@ export default function Home() {
         </Box>
         <FeaturedDestinations />
       </Box>
+      <Footer />
     </Box>
   );
 }
