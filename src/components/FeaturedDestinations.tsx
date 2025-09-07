@@ -10,9 +10,10 @@ import {
 export default function FeaturedDestinations() {
   return (
     <Box sx={{
-      width: '100%',
+      maxWidth: '64rem',
       px: 2,
       py: { xs: 4, sm: 5, lg: 6 },
+      mx: 'auto',
       backgroundColor: 'background.default'
     }}>
       <Typography 
@@ -26,7 +27,7 @@ export default function FeaturedDestinations() {
         Featured Destinations
       </Typography>
       
-      <Grid container spacing={3} sx={{ maxWidth: '1200px'}}>
+      <Grid container spacing={2}>
         {/* Sea Section */}
         <Grid item xs={12} md={4}>
           <Card 
@@ -50,7 +51,7 @@ export default function FeaturedDestinations() {
               p: 3
             }}>
               <Box sx={{ mb: 2 }}>
-                <SeaIcon sx={{ fontSize: 40, color: 'primary.main' }} />
+                <SeaIcon sx={{ fontSize: 40, color: 'secondary.main' }} />
               </Box>
               
               <Typography 
@@ -123,7 +124,7 @@ export default function FeaturedDestinations() {
               p: 3
             }}>
               <Box sx={{ mb: 2 }}>
-                <MountainsIcon sx={{ fontSize: 40, color: 'primary.main' }} />
+                <MountainsIcon sx={{ fontSize: 40, color: 'secondary.main' }} />
               </Box>
               
               <Typography 
@@ -196,7 +197,7 @@ export default function FeaturedDestinations() {
               p: 3
             }}>
               <Box sx={{ mb: 2 }}>
-                <NearbyIcon sx={{ fontSize: 40, color: 'primary.main' }} />
+                <NearbyIcon sx={{ fontSize: 40, color: 'secondary.main' }} />
               </Box>
               
               <Typography 
