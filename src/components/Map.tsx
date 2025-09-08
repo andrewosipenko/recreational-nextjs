@@ -60,7 +60,8 @@ export default function HotelMap() {
             website: 'www.sample1.com',
             latitude: 52.2297,
             longitude: 21.0122,
-            inForest: 0.5
+            inForest: 0.5,
+            minimap: ''
           },
           {
             id: 'SAMPLE-2',
@@ -68,7 +69,8 @@ export default function HotelMap() {
             website: 'www.sample2.com',
             latitude: 50.0647,
             longitude: 19.9450,
-            inForest: 1.2
+            inForest: 1.2,
+            minimap: ''
           }
         ];
         setHotels(sampleHotels);
@@ -202,25 +204,68 @@ export default function HotelMap() {
               position={{ lat: selectedHotel.latitude, lng: selectedHotel.longitude }}
               onCloseClick={() => setSelectedHotel(null)}
             >
-              <div style={{ padding: '8px', maxWidth: '250px' }}>
-                <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 'bold' }}>
-                  {selectedHotel.name}
-                </h3>
-                {selectedHotel.website && (
-                  <p style={{ margin: '4px 0', fontSize: '14px', color: '#666' }}>
-                    <a 
-                      href={`https://${selectedHotel.website}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      style={{ color: '#1976d2', textDecoration: 'none' }}
+              <div style={{ padding: '8px'}}>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                  {/* Minimap on the left */}
+                  {selectedHotel.minimap ? (
+                    <div 
+                      style={{ 
+                        width: '100px',
+                        height: '100px',
+                        borderRadius: '4px',
+                        overflow: 'hidden',
+                        border: '1px solid #ddd',
+                        backgroundColor: '#f5f5f5',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                      dangerouslySetInnerHTML={{ __html: selectedHotel.minimap }}
+                    />
+                  ) : (
+                    <div 
+                      style={{ 
+                        width: '100px',
+                        height: '100px',
+                        borderRadius: '4px',
+                        border: '1px solid #ddd',
+                        backgroundColor: '#f5f5f5',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#666',
+                        fontSize: '12px'
+                      }}
                     >
-                      {selectedHotel.website}
-                    </a>
-                  </p>
-                )}
-                <p style={{ margin: '4px 0', fontSize: '12px', color: '#888' }}>
-                  Forest distance: {selectedHotel.inForest}km
-                </p>
+                      No Map
+                    </div>
+                  )}
+                  
+                  {/* Hotel info on the right */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 'bold' }}>
+                      {selectedHotel.name}
+                    </h3>
+                    {selectedHotel.website && (
+                      <p style={{ margin: '4px 0', fontSize: '14px', color: '#666' }}>
+                        <a 
+                          href={`https://${selectedHotel.website}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          style={{ color: '#1976d2', textDecoration: 'none' }}
+                        >
+                          {selectedHotel.website}
+                        </a>
+                      </p>
+                    )}
+                    <p style={{ margin: '4px 0', fontSize: '12px', color: '#888' }}>
+                      Forest distance: {selectedHotel.inForest}km
+                    </p>
+                    <p style={{ margin: '4px 0', fontSize: '12px', color: '#888' }}>
+                      Coordinates: {selectedHotel.latitude.toFixed(4)}, {selectedHotel.longitude.toFixed(4)}
+                    </p>
+                  </div>
+                </div>
               </div>
             </InfoWindow>
           )}

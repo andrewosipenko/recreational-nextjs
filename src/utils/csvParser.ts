@@ -5,6 +5,7 @@ export interface Hotel {
   latitude: number;
   longitude: number;
   inForest: number;
+  minimap: string;
 }
 
 export function parseHotelsFromCSV(csvContent: string): Hotel[] {
@@ -17,7 +18,6 @@ export function parseHotelsFromCSV(csvContent: string): Hotel[] {
     }
     
     const headers = lines[0].split(';');
-    console.log('CSV headers:', headers);
     
     // Skip header row and parse data
     const hotels: Hotel[] = [];
@@ -27,15 +27,26 @@ export function parseHotelsFromCSV(csvContent: string): Hotel[] {
         const line = lines[i];
         const values = line.split(';');
         
-        if (values.length >= 6) {
+        if (values.length >= 7) {
+          // Handle the SVG data which is wrapped in quotes and has escaped quotes
+          let minimapData = values[6] || '';
+          // Remove surrounding quotes if present
+          if (minimapData.startsWith('"') && minimapData.endsWith('"')) {
+            minimapData = minimapData.slice(1, -1);
+          }
+          // Replace escaped quotes with regular quotes
+          minimapData = minimapData.replace(/""/g, '"');
+          
           const hotel: Hotel = {
             id: values[0] || '',
             name: values[1] || '',
             website: values[2] || '',
             latitude: parseFloat(values[3]) || 0,
             longitude: parseFloat(values[4]) || 0,
-            inForest: parseFloat(values[5]) || 0
+            inForest: parseFloat(values[5]) || 0,
+            minimap: minimapData
           };
+          
           
           // Only add hotels with valid coordinates
           if (hotel.latitude !== 0 && hotel.longitude !== 0) {
